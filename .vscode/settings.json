@@ -1,5 +1,9 @@
 {
     "cSpell.words": [
-        "nestjs"
+        "datasource",
+        "Emplyee",
+        "nestjs",
+        "pkey",
+        "UNPOOLED"
     ]
 }

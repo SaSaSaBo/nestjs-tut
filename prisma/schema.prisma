@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// prisma/schema.prisma
+datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+  // uncomment next line if you use Prisma <5.10
+  // directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+model Emplyee{
+  id        Int      @id @default(autoincrement())
+  name      String 
+  email     String   @unique
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// npx prisma generate
+// npx prisma migrate dev --name name_change // it won't be unique anymore 
+
+enum Role{
+  INTERN
+  ADMIN
+  STUDENT
+}
+
+// in console npx prisma migrate dev
+                              // this is going to save the SQL statements in a folder inside of our Prisma folder.
+           // npx prisma migrate push
+                              // it would do the same thing except it won't save those SQL statement for you to reference later.
+           // npx prisma migrate deploy
+                              // if you were working with a local database first and then you wanted the send those changes to online deployment you would use this.                
