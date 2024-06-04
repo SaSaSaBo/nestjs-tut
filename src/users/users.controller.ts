@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users') 
 // localhost:3000/users
@@ -42,14 +44,25 @@ export class UsersController {
     */
 
     @Post() // POST /users
-    create(@Body() user: {name: string, email: string, role: 'INTERN' | 'ADMIN' | 'STUDENT'}) {
+    create(@Body(ValidationPipe) CreateUserDto: CreateUserDto )/*user: {name: string, email: string, role: 'INTERN' | 'ADMIN' | 'STUDENT'}) {
         return this.usersService.create(user) // user
+    when we added the dto folder we can change like this.    
+    */
+    {
+        return this.usersService.create(CreateUserDto)
     }
+    
 
     @Patch(':id') // PATCH /users/:id
-    update(@Param('id', ParseIntPipe) id: number, @Body() userUpdate: {name?: string, email?: string, role?: 'INTERN' | 'ADMIN' | 'STUDENT'}) {
+    update(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe)  UpdateUserDto: UpdateUserDto )/*userUpdate: {name?: string, email?: string, role?: 'INTERN' | 'ADMIN' | 'STUDENT'}) {
         return this.usersService.update(id, userUpdate) // { id, ...userUpdate }
     }
+    when we added the dto folder we can change like this.
+    */
+    {
+        return this.usersService.update(id, UpdateUserDto)
+    }
+
 
     @Delete(':id') // DELETE /users/:id
     delete(@Param('id', ParseIntPipe) id: number) {

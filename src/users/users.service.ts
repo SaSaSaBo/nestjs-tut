@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { NotFoundException } from '@nestjs/common';
+
 
 @Injectable() // attach metadata that declares that we're about the create our user.
 export class UsersService {
@@ -37,32 +41,38 @@ export class UsersService {
 
     findAll(role?: 'INTERN' | 'ADMIN' | 'STUDENT') {
         if (role) {
-            return this.users.filter(user => user.role === role)
-        }
+            /* return*/ const rolesArray = this.users.filter(user => user.role === role)
+            if(rolesArray.length === 0) throw new NotFoundException('User role not found')
+            return rolesArray
+       }
         return this.users
     }
 
     findOne(id: number) {
         const user = this.users.find(user => user.id === id)
+
+        // when we add the NotFoundException we should add the if condition for the getting that error
+        if(!user) throw new NotFoundException('User not found')
+
         return user
     }
 
-    create(user: {name: string, email: string, role: 'INTERN' | 'ADMIN' | 'STUDENT'}) {
+    create(CreateUserDto: CreateUserDto) {// user: {name: string, email: string, role: 'INTERN' | 'ADMIN' | 'STUDENT'}) {
         const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id) // sort users by highest id
         const newUser = {
             id: usersByHighestId[0].id + 1,
-            ...user
+            ...CreateUserDto
         }
         this.users.push(newUser)
         return newUser
     }
 
-    update(id: number, updatedUser: {name?: string, email?: string, role?: 'INTERN' | 'ADMIN' | 'STUDENT'}) { // with ? make each one of them optional.
+    update(id: number, UpdateUserDto: UpdateUserDto) {// updatedUser: {name?: string, email?: string, role?: 'INTERN' | 'ADMIN' | 'STUDENT'}) { // with ? make each one of them optional.
         this.users = this.users.map(user => {
             if (user.id === id) {
                 return {
                     ...user,
-                    ...updatedUser
+                    ...UpdateUserDto
                 }
             }
             return user
@@ -70,6 +80,7 @@ export class UsersService {
 
         return this.findOne(id)
     }
+    
 
     delete(id: number) {
         const removedUser = this.findOne(id)
