@@ -45,7 +45,7 @@ export class UsersController {
 
     @Post() // POST /users
     create(@Body(ValidationPipe) CreateUserDto: CreateUserDto )/*user: {name: string, email: string, role: 'INTERN' | 'ADMIN' | 'STUDENT'}) {
-        return this.usersService.create(user) // user
+        return this.usersService.create(user) // user }
     when we added the dto folder we can change like this.    
     */
     {

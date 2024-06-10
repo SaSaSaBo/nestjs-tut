@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, InternalServerErrorException, Post, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
+import { FreezePipe } from './pipes/freeze.pipe';
 
 @Controller()
 export class AppController {
@@ -10,4 +11,14 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+  @Post()
+  @UseGuards(FreezePipe)
+  examplesPost(@Body(new FreezePipe()) body: any){
+    body.test = 32;
+  }
+  @Get('error')
+  throwError() {
+    throw new InternalServerErrorException();
+  }
+  
 }
